@@ -1,0 +1,450 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block title %}Customer Details - Sachdeva Opticals{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        /* Elegant and Decent Color Scheme */
+        :root {
+            --primary: #4A55A2; /* Deep Blue */
+            --secondary: #7895CB; /* Soft Blue */
+            --accent: #A0BFE0; /* Light Blue */
+            --background: #FFFFFF; /* White */
+            --card-bg: #FFFFFF; /* White */
+            --text: #2C2C2C; /* Dark Gray */
+            --text-soft: #6C757D; /* Gray */
+            --border: rgba(0, 0, 0, 0.1); /* Light Border */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft Shadow */
+            --spacing-unit: 1rem; /* Base spacing unit */
+            --spacing-small: calc(var(--spacing-unit) * 0.5);
+            --spacing-medium: var(--spacing-unit);
+            --spacing-large: calc(var(--spacing-unit) * 1.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--background);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            padding: var(--spacing-large);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card-elegant {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--spacing-large);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card-elegant:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header-elegant {
+            background: var(--primary);
+            border-bottom: none;
+            padding: var(--spacing-medium);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .card-header-elegant h2 {
+            margin: 0;
+            color: white;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+
+        .card-body {
+            padding: var(--spacing-medium);
+        }
+
+        .section-title-elegant {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: var(--spacing-medium);
+            font-size: 1.5rem;
+        }
+
+        .info-box-elegant {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: var(--spacing-medium);
+            margin-bottom: var(--spacing-medium);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-box-elegant:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .info-box-elegant p, .info-box-elegant td {
+            color: var(--text);
+            margin-bottom: var(--spacing-small);
+            font-size: 1rem;
+        }
+
+        .text-primary-elegant {
+            color: var(--primary) !important;
+        }
+
+        .btn-elegant {
+            font-size: 1rem;
+            padding: var(--spacing-small) var(--spacing-medium);
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            color: white;
+        }
+
+        .btn-warning-elegant {
+            background: var(--secondary);
+        }
+
+        .btn-primary-elegant {
+            background: var(--primary);
+        }
+
+        .btn-secondary-elegant {
+            background: var(--text-soft);
+        }
+
+        .btn-danger-elegant {
+            background: #DC3545; /* Red */
+        }
+
+        .btn-warning-elegant:hover, .btn-primary-elegant:hover, .btn-secondary-elegant:hover, .btn-danger-elegant:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            .dashboard-container {
+                padding: var(--spacing-medium);
+            }
+
+            .btn-elegant {
+                font-size: 0.875rem;
+                padding: var(--spacing-small) var(--spacing-medium);
+            }
+
+            .card-elegant {
+                margin-bottom: var(--spacing-medium);
+            }
+
+            .info-box-elegant {
+                padding: var(--spacing-small);
+            }
+
+            .modal-dialog {
+                max-width: 90%;
+                margin: var(--spacing-large) auto;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Customer Details Card -->
+        <div class="card-elegant animate__animated animate__fadeIn">
+            <div class="card-header-elegant">
+                <h2 class="mb-0"><i class="fas fa-user-circle" aria-label="Customer Details"></i> Customer Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Personal Information -->
+                    <div class="col-md-6">
+                        <h4 class="section-title-elegant"><i class="fas fa-user" aria-label="Personal Information"></i> Personal Information</h4>
+                        <div class="info-box-elegant">
+                            <p><strong>First Name:</strong> <span class="text-primary-elegant">{{ customer.first_name }}</span></p>
+                            <p><strong>Last Name:</strong> <span class="text-primary-elegant">{{ customer.last_name }}</span></p>
+                            <p><strong>Email:</strong> <span class="text-primary-elegant">{{ customer.email }}</span></p>
+                            <p><strong>Phone:</strong> <span class="text-primary-elegant">{{ customer.phone }}</span></p>
+                            <p><strong>Address:</strong> <span class="text-primary-elegant">{{ customer.address }}</span></p>
+                            <p><strong>Date of Birth:</strong> <span class="text-primary-elegant">{{ customer.date_of_birth }}</span></p>
+                            <p><strong>Gender:</strong> <span class="text-primary-elegant">{{ customer.get_gender_display }}</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Eye Prescription Information -->
+                    <div class="col-md-6">
+                        <h4 class="section-title-elegant"><i class="fas fa-eye" aria-label="Eye Prescription"></i> Eye Prescription</h4>
+                        <!-- Left Eye (OS) -->
+                        <div class="info-box-elegant">
+                            <h5 class="text-primary-elegant">Left Eye (OS)</h5>
+                            <p><strong>SPH:</strong> {{ customer.sph_left }}</p>
+                            <p><strong>CYL:</strong> {{ customer.cyl_left }}</p>
+                            <p><strong>AXIS:</strong> {{ customer.axis_left }}</p>
+                            <p><strong>ADD:</strong> {{ customer.add_left }}</p>
+                            <p><strong>Vision:</strong> {{ customer.vision_left }}</p>
+                        </div>
+                        <!-- Right Eye (OD) -->
+                        <div class="info-box-elegant">
+                            <h5 class="text-primary-elegant">Right Eye (OD)</h5>
+                            <p><strong>SPH:</strong> {{ customer.sph_right }}</p>
+                            <p><strong>CYL:</strong> {{ customer.cyl_right }}</p>
+                            <p><strong>AXIS:</strong> {{ customer.axis_right }}</p>
+                            <p><strong>ADD:</strong> {{ customer.add_right }}</p>
+                            <p><strong>Vision:</strong> {{ customer.vision_right }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h4 class="section-title-elegant"><i class="fas fa-info-circle" aria-label="Additional Information"></i> Additional Information</h4>
+                        <div class="info-box-elegant">
+                            <p><strong>Prescription Date:</strong> <span class="text-primary-elegant">{{ customer.prescription_date }}</span></p>
+                            <p><strong>Additional Info:</strong> <span class="text-primary-elegant">{{ customer.additional_info }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4 mb-4">
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'customers:edit_customer' customer.id %}" class="btn btn-warning-elegant btn-elegant animate__animated animate__fadeInLeft">
+                    <i class="fas fa-edit"></i> Edit Customer
+                </a>
+                <a href="{% url 'customers:add_purchase_and_prescription' customer.id %}" class="btn btn-primary-elegant btn-elegant animate__animated animate__fadeInUp">
+                    <i class="fas fa-shopping-cart"></i> Add Purchase
+                </a>
+                <a href="{% url 'customers:customer_list' %}" class="btn btn-secondary-elegant btn-elegant animate__animated animate__fadeInRight">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+                <button type="button" class="btn btn-danger-elegant btn-elegant animate__animated animate__fadeInUp" data-bs-toggle="modal" data-bs-target="#deleteCustomerModal">
+                    <i class="fas fa-trash"></i> Delete Customer
+                </button>
+            </div>
+        </div>
+
+        <!-- Delete Customer Modal -->
+        <div class="modal fade modal-elegant" id="deleteCustomerModal" tabindex="-1" aria-labelledby="deleteCustomerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteCustomerModalLabel">Delete Customer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this customer? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary-elegant" data-bs-dismiss="modal">Cancel</button>
+                        <form action="{% url 'customers:delete_customer' customer.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger-elegant">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purchases Section -->
+        <div class="mt-4">
+            <h3 class="section-title-elegant"><i class="fas fa-shopping-cart" aria-label="Purchase History"></i> Purchase History</h3>
+            {% if purchases %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Total Cost</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for purchase in purchases %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ purchase.date_of_purchase }}</td>
+                                    <td>{{ purchase.get_purchase_type_display }}</td>
+                                    <td>₹{{ purchase.total_cost }}</td>
+                                    <td>
+                                        <a href="{% url 'customers:view_purchase' purchase.id %}" class="btn btn-sm btn-info me-2">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePurchaseModal{{ purchase.id }}">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Delete Purchase Modal -->
+                                <div class="modal fade modal-elegant" id="deletePurchaseModal{{ purchase.id }}" tabindex="-1" aria-labelledby="deletePurchaseModalLabel{{ purchase.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deletePurchaseModalLabel{{ purchase.id }}">Delete Purchase</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete this purchase?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary-elegant" data-bs-dismiss="modal">Cancel</button>
+                                                <form action="{% url 'customers:delete_purchase' purchase.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger-elegant">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-elegant alert-info" role="alert">
+                    <i class="fas fa-info-circle"></i> No purchase history found for this customer.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Prescriptions Section -->
+        <div class="mt-4">
+            <h3 class="section-title-elegant"><i class="fas fa-eye" aria-label="Prescription History"></i> Prescription History</h3>
+            {% if prescriptions %}
+                {% for prescription in prescriptions %}
+                    <div class="info-box-elegant mb-3">
+                        <h5 class="text-primary-elegant">Prescription on {{ prescription.date }}</h5>
+                        <!-- Left Eye (OS) -->
+                        <div class="info-box-elegant">
+                            <h5 class="text-primary-elegant">Left Eye (OS)</h5>
+                            <p><strong>SPH:</strong> {{ prescription.sph_left }}</p>
+                            <p><strong>CYL:</strong> {{ prescription.cyl_left }}</p>
+                            <p><strong>AXIS:</strong> {{ prescription.axis_left }}</p>
+                            <p><strong>ADD:</strong> {{ prescription.add_left }}</p>
+                            <p><strong>Vision:</strong> {{ prescription.vision_left }}</p>
+                        </div>
+                        <!-- Right Eye (OD) -->
+                        <div class="info-box-elegant">
+                            <h5 class="text-primary-elegant">Right Eye (OD)</h5>
+                            <p><strong>SPH:</strong> {{ prescription.sph_right }}</p>
+                            <p><strong>CYL:</strong> {{ prescription.cyl_right }}</p>
+                            <p><strong>AXIS:</strong> {{ prescription.axis_right }}</p>
+                            <p><strong>ADD:</strong> {{ prescription.add_right }}</p>
+                            <p><strong>Vision:</strong> {{ prescription.vision_right }}</p>
+                        </div>
+                        <div class="action-buttons mt-3">
+                            <a href="{% url 'customers:edit_prescription' prescription.id %}" class="btn btn-sm btn-warning-elegant me-2">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger-elegant" data-bs-toggle="modal" data-bs-target="#deletePrescriptionModal{{ prescription.id }}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Delete Prescription Modal -->
+                    <div class="modal fade modal-elegant" id="deletePrescriptionModal{{ prescription.id }}" tabindex="-1" aria-labelledby="deletePrescriptionModalLabel{{ prescription.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deletePrescriptionModalLabel{{ prescription.id }}">Delete Prescription</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this prescription?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary-elegant" data-bs-dismiss="modal">Cancel</button>
+                                    <form action="{% url 'customers:delete_prescription' prescription.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger-elegant">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-elegant alert-info" role="alert">
+                    <i class="fas fa-info-circle"></i> No prescription history found for this customer.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS for interactivity -->
+    <script>
+        // Add hover effect to info boxes and buttons using event delegation
+        document.body.addEventListener('mouseenter', (e) => {
+            if (e.target.classList.contains('info-box-elegant')) {
+                e.target.style.transform = 'translateY(-5px)';
+                e.target.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
+            }
+            if (e.target.classList.contains('btn-elegant')) {
+                e.target.style.transform = 'translateY(-3px)';
+            }
+        });
+
+        document.body.addEventListener('mouseleave', (e) => {
+            if (e.target.classList.contains('info-box-elegant')) {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            }
+            if (e.target.classList.contains('btn-elegant')) {
+                e.target.style.transform = 'translateY(0)';
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

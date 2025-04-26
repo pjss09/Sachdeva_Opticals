@@ -1,0 +1,67 @@
+{% extends 'customers/base.html' %}
+
+{% block content %}
+<div class="main-container">
+    <div class="dashboard-header">
+        <h1>Add New Product</h1>
+        <p class="tagline">Enhance your inventory with premium eyewear</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- File Upload Section -->
+        <div class="form-card">
+            <div class="card-header">
+                <i class="fas fa-file-upload"></i> Upload Product Details
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="file">Upload File (Excel, CSV, or PDF)</label>
+                    <input type="file" name="file" id="file" accept=".xlsx, .csv, .pdf" class="form-control" required>
+                    <small class="text-muted">Supported formats: .xlsx, .csv, .pdf</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Entry Section (Optional) -->
+        <div class="form-card">
+            <div class="card-header">
+                <i class="fas fa-edit"></i> Manual Entry (Optional)
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Product Name</label>
+                    {{ form.name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">Category</label>
+                    {{ form.category }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.price.id_for_label }}">Base Price (₹)</label>
+                    {{ form.price }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.gst_percentage.id_for_label }}">GST Percentage (%)</label>
+                    {{ form.gst_percentage }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.reorder_level.id_for_label }}">Reorder Level</label>
+                    {{ form.reorder_level }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Product
+            </button>
+            <a href="{% url 'customers:manage_inventory' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

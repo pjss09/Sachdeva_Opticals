@@ -1,0 +1,505 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block title %}Edit Customer - Sachdeva Opticals{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        /* Custom CSS */
+        :root {
+            --primary: #4A55A2; /* Deep Blue */
+            --secondary: #7895CB; /* Soft Blue */
+            --accent: #A0BFE0; /* Light Blue */
+            --background: #F5F5F5; /* Light Gray */
+            --glass: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            --text: #2C2C2C; /* Dark Gray */
+            --text-soft: #6C757D; /* Gray */
+        }
+
+        body {
+            background-color: var(--background);
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            padding: 1rem; /* Reduced padding */
+        }
+
+        .form-container {
+            background: var(--glass);
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
+            padding: 1.5rem; /* Reduced padding */
+            margin: 1rem auto; /* Reduced margin */
+            max-width: 1200px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1rem; /* Reduced margin */
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-bottom: none;
+            padding: 1rem; /* Reduced padding */
+            border-radius: 0.75rem 0.75rem 0 0;
+        }
+
+        .card-header h4 {
+            margin: 0;
+            color: white;
+            font-weight: 600;
+        }
+
+        .input-group-text {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--primary);
+            min-width: 45px;
+            justify-content: center;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(74, 85, 162, 0.25);
+        }
+
+        .eye-prescription-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem; /* Reduced gap */
+            position: relative;
+        }
+
+        .eye-prescription-container:before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent 0%, var(--primary) 50%, transparent 100%);
+        }
+
+        .eye-section {
+            padding: 1rem; /* Reduced padding */
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .eye-section h5 {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem; /* Reduced margin */
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 0.5rem 1.5rem; /* Reduced padding */
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0.5rem 1rem rgba(74, 85, 162, 0.3);
+        }
+
+        .text-gradient {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .animate__animated {
+            animation-duration: 1s;
+        }
+
+        /* Reduced margins for form elements */
+        .form-group {
+            margin-bottom: 1rem; /* Reduced margin */
+        }
+
+        .header {
+            margin-bottom: 1.5rem; /* Reduced margin */
+        }
+
+        .header h1 {
+            font-size: 2rem; /* Slightly smaller heading */
+        }
+
+        .header p {
+            font-size: 0.9rem; /* Smaller tagline */
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="form-container animate__animated animate__fadeIn">
+            <header class="header">
+                <h1 class="text-gradient display-5 fw-bold">
+                    <i class="fas fa-user-edit me-2"></i>Edit Customer Profile
+                </h1>
+                <p class="text-muted">Update customer details and prescription information</p>
+            </header>
+
+            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <!-- Personal Information Card -->
+                <div class="card mb-3 animate__animated animate__slideInLeft"> <!-- Reduced margin-bottom -->
+                    <div class="card-header">
+                        <h4><i class="fas fa-user me-2"></i>Personal Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3"> <!-- Reduced gap -->
+                            <!-- First Name -->
+                            <div class="col-md-6 form-group">
+                                <label class="form-label">First Name<span class="required-asterisk">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" 
+                                           id="first_name" name="first_name" value="{{ form.first_name.value }}" required aria-label="First Name">
+                                    {% if form.first_name.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.first_name.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Last Name -->
+                            <div class="col-md-6 form-group">
+                                <label class="form-label">Last Name<span class="required-asterisk">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control {% if form.last_name.errors %}is-invalid{% endif %}" 
+                                           id="last_name" name="last_name" value="{{ form.last_name.value }}" required aria-label="Last Name">
+                                    {% if form.last_name.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.last_name.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6 form-group">
+                                <label class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
+                                           id="email" name="email" value="{{ form.email.value }}" aria-label="Email">
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.email.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="col-md-6 form-group">
+                                <label class="form-label">Phone<span class="required-asterisk">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="tel" class="form-control {% if form.phone.errors %}is-invalid{% endif %}" 
+                                           id="phone" name="phone" value="{{ form.phone.value }}" required aria-label="Phone">
+                                    {% if form.phone.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.phone.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="col-12 form-group">
+                                <label class="form-label">Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                    <textarea class="form-control {% if form.address.errors %}is-invalid{% endif %}" 
+                                              id="address" name="address" rows="2" aria-label="Address">{{ form.address.value }}</textarea>
+                                    {% if form.address.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.address.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="col-md-6 form-group">
+                                <label class="form-label">Date of Birth</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                    <input type="date" class="form-control {% if form.date_of_birth.errors %}is-invalid{% endif %}" 
+                                           id="date_of_birth" name="date_of_birth" value="{{ form.date_of_birth.value|date:'Y-m-d' }}" aria-label="Date of Birth">
+                                    {% if form.date_of_birth.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.date_of_birth.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-md-6 form-group">
+                                <label class="form-label">Gender<span class="required-asterisk">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                                    <select class="form-select {% if form.gender.errors %}is-invalid{% endif %}" 
+                                            id="gender" name="gender" required aria-label="Gender">
+                                        <option value="M" {% if form.gender.value == 'M' %}selected{% endif %}>Male</option>
+                                        <option value="F" {% if form.gender.value == 'F' %}selected{% endif %}>Female</option>
+                                        <option value="O" {% if form.gender.value == 'O' %}selected{% endif %}>Other</option>
+                                    </select>
+                                    {% if form.gender.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.gender.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eye Prescription Card -->
+                <div class="card mb-3 animate__animated animate__slideInRight"> <!-- Reduced margin-bottom -->
+                    <div class="card-header">
+                        <h4><i class="fas fa-eye me-2"></i>Eye Prescription Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="eye-prescription-container">
+                            <!-- Left Eye Section -->
+                            <div class="eye-section">
+                                <h5 class="text-gradient"><i class="fas fa-eye me-2"></i>Left Eye (OD)</h5>
+                                <!-- SPH Left -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">SPH</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="sph_left" name="sph_left">
+                                            <option value="">Select SPH</option>
+                                            {% for sph in sph_options %}
+                                            <option value="{{ sph }}" {% if form.sph_left.value == sph %}selected{% endif %}>{{ sph }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" step="0.01" class="form-control" name="sph_left_manual" 
+                                               placeholder="Manual Entry" value="{{ form.sph_left_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- CYL Left -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">CYL</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="cyl_left" name="cyl_left">
+                                            <option value="">Select CYL</option>
+                                            {% for cyl in cyl_options %}
+                                            <option value="{{ cyl }}" {% if form.cyl_left.value == cyl %}selected{% endif %}>{{ cyl }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" step="0.01" class="form-control" name="cyl_left_manual" 
+                                               placeholder="Manual Entry" value="{{ form.cyl_left_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- AXIS Left -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">AXIS</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="axis_left" name="axis_left">
+                                            <option value="">Select AXIS</option>
+                                            {% for axis in axis_options %}
+                                            <option value="{{ axis }}" {% if form.axis_left.value == axis %}selected{% endif %}>{{ axis }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" class="form-control" name="axis_left_manual" 
+                                               placeholder="Manual Entry" value="{{ form.axis_left_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- ADD Left -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">ADD</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="add_left" name="add_left">
+                                            <option value="">Select ADD</option>
+                                            {% for add in add_options %}
+                                            <option value="{{ add }}" {% if form.add_left.value == add %}selected{% endif %}>{{ add }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" step="0.01" class="form-control" name="add_left_manual" 
+                                               placeholder="Manual Entry" value="{{ form.add_left_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- Vision Left -->
+                                <div class="mb-0">
+                                    <label class="form-label">Vision</label>
+                                    <input type="text" class="form-control" id="vision_left" name="vision_left" 
+                                           value="{{ form.vision_left.value }}">
+                                </div>
+                            </div>
+
+                            <!-- Right Eye Section -->
+                            <div class="eye-section">
+                                <h5 class="text-gradient"><i class="fas fa-eye me-2"></i>Right Eye (OS)</h5>
+                                <!-- SPH Right -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">SPH</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="sph_right" name="sph_right">
+                                            <option value="">Select SPH</option>
+                                            {% for sph in sph_options %}
+                                            <option value="{{ sph }}" {% if form.sph_right.value == sph %}selected{% endif %}>{{ sph }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" step="0.01" class="form-control" name="sph_right_manual" 
+                                               placeholder="Manual Entry" value="{{ form.sph_right_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- CYL Right -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">CYL</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="cyl_right" name="cyl_right">
+                                            <option value="">Select CYL</option>
+                                            {% for cyl in cyl_options %}
+                                            <option value="{{ cyl }}" {% if form.cyl_right.value == cyl %}selected{% endif %}>{{ cyl }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" step="0.01" class="form-control" name="cyl_right_manual" 
+                                               placeholder="Manual Entry" value="{{ form.cyl_right_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- AXIS Right -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">AXIS</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="axis_right" name="axis_right">
+                                            <option value="">Select AXIS</option>
+                                            {% for axis in axis_options %}
+                                            <option value="{{ axis }}" {% if form.axis_right.value == axis %}selected{% endif %}>{{ axis }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" class="form-control" name="axis_right_manual" 
+                                               placeholder="Manual Entry" value="{{ form.axis_right_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- ADD Right -->
+                                <div class="mb-3"> <!-- Reduced margin-bottom -->
+                                    <label class="form-label">ADD</label>
+                                    <div class="input-group">
+                                        <select class="form-select select2" id="add_right" name="add_right">
+                                            <option value="">Select ADD</option>
+                                            {% for add in add_options %}
+                                            <option value="{{ add }}" {% if form.add_right.value == add %}selected{% endif %}>{{ add }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="number" step="0.01" class="form-control" name="add_right_manual" 
+                                               placeholder="Manual Entry" value="{{ form.add_right_manual.value }}">
+                                    </div>
+                                </div>
+                                <!-- Vision Right -->
+                                <div class="mb-0">
+                                    <label class="form-label">Vision</label>
+                                    <input type="text" class="form-control" id="vision_right" name="vision_right" 
+                                           value="{{ form.vision_right.value }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prescription Date -->
+                        <div class="row mt-3"> <!-- Reduced margin-top -->
+                            <div class="col-md-6">
+                                <label class="form-label">Prescription Date</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                    <input type="date" class="form-control" id="prescription_date" name="prescription_date" 
+                                           value="{{ form.prescription_date.value|date:'Y-m-d' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="row mt-3"> <!-- Reduced margin-top -->
+                            <div class="col-12">
+                                <label class="form-label">Additional Information</label>
+                                <textarea class="form-control" id="additional_info" name="additional_info" rows="3">{{ form.additional_info.value }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-end gap-3 mt-4"> <!-- Reduced margin-top -->
+                    <a href="{% url 'customers:customer_list' %}" class="btn btn-secondary px-4 py-2 animate__animated animate__fadeInLeft">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4 py-2 animate__animated animate__fadeInRight">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        // Smooth hover effect for cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('animate__pulse');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('animate__pulse');
+            });
+        });
+
+        // Initialize Select2
+        $(document).ready(function() {
+            $('.select2').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

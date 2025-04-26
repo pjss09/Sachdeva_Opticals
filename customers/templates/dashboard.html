@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sachdeva Opticals | Dashboard</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #4f46e5; /* Indigo */
+        --secondary: #8b5cf6; /* Violet */
+        --accent: #f59e0b; /* Amber */
+        --background: #f9fafb; /* Light gray */
+        --glass: rgba(255, 255, 255, 0.7);
+        --text: #1f2937; /* Dark Gray */
+        --border: rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+        background-size: 400% 400%;
+        animation: gradientShift 30s ease infinite;
+        color: var(--text);
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .dashboard-container {
+        display: flex;
+        max-width: 1400px;
+        width: 100%;
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar {
+        width: 260px;
+        background: rgba(255, 255, 255, 0.3);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 1rem;
+    }
+
+    .brand {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--text);
+        transition: background 0.3s, transform 0.3s;
+    }
+
+    .nav-item i {
+        color: var(--primary);
+        font-size: 1.2rem;
+    }
+
+    .nav-item:hover {
+        background: rgba(0, 0, 0, 0.05);
+        transform: translateX(8px);
+    }
+
+    .main-content {
+        flex: 1;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero-card {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        backdrop-filter: blur(8px);
+    }
+
+    .hero-card h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .hero-card p {
+        margin-top: 0.5rem;
+        font-size: 1rem;
+        color: var(--text);
+        opacity: 0.8;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .card i {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .card p {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-container {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            flex-direction: row;
+            overflow-x: auto;
+            border-right: none;
+            border-bottom: 1px solid var(--border);
+        }
+    }
+</style>
+</head>
+
+<body>
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div class="brand">Dashboard</div>
+        <a href="{% url 'customers:view_customers' %}" class="nav-item"><i class="fas fa-users"></i> View Customers</a>
+        <a href="{% url 'customers:add_customer' %}" class="nav-item"><i class="fas fa-user-plus"></i> Add/Update Customer</a>
+        <a href="{% url 'customers:manage_inventory' %}" class="nav-item"><i class="fas fa-boxes"></i> Manage Inventory</a>
+        <a href="{% url 'customers:create_bill' %}" class="nav-item"><i class="fas fa-file-invoice"></i> Create Bill</a>
+        <a href="{% url 'customers:sales_report' %}" class="nav-item"><i class="fas fa-chart-line"></i> Sales Report</a>
+        <a href="{% url 'customers:logout' %}" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="hero-card">
+            <h1>Sachdeva Opticals</h1>
+            <p>Since 1989 | A Legacy of Trust & Vision</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <a href="{% url 'customers:view_customers' %}" class="card">
+                <i class="fas fa-users"></i>
+                <h3>View Customers</h3>
+                <p>Manage all customer records seamlessly</p>
+            </a>
+
+            <a href="{% url 'customers:add_customer' %}" class="card">
+                <i class="fas fa-user-plus"></i>
+                <h3>Add/Update Customer</h3>
+                <p>Quickly add or edit customer details</p>
+            </a>
+
+            <a href="{% url 'customers:manage_inventory' %}" class="card">
+                <i class="fas fa-boxes"></i>
+                <h3>Manage Inventory</h3>
+                <p>Monitor and update stock levels</p>
+            </a>
+
+            <a href="{% url 'customers:create_bill' %}" class="card">
+                <i class="fas fa-file-invoice"></i>
+                <h3>Create Bill</h3>
+                <p>Generate invoices with ease</p>
+            </a>
+
+            <a href="{% url 'customers:sales_report' %}" class="card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Sales Report</h3>
+                <p>Analyze your business growth</p>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

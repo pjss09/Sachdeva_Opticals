@@ -1,0 +1,329 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}Customer List - Sachdeva Opticals{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="header-text">
+            <h1>Customer Management</h1>
+            <p class="tagline">Trusted Vision Care Since 1989</p>
+        </div>
+        <div class="total-card glow">
+            <i class="fas fa-users"></i>
+            <div class="total-content">
+                <span class="count">{{ customers|length }}</span>
+                <span class="label">Active Customers</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Table Section -->
+    <div class="content-wrapper">
+        <!-- Search Card -->
+        <div class="cyber-card search-card">
+            <form method="GET" action="{% url 'customers:customer_list' %}">
+                <div class="search-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="q" value="{{ request.GET.q }}" 
+                           placeholder="Search customers by name, email, or phone..." 
+                           class="glass-input">
+                </div>
+            </form>
+        </div>
+
+        <!-- Customer Table -->
+        <div class="cyber-card table-card">
+            <table class="neo-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer Name</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <div class="customer-name">
+                                {{ customer.first_name }} 
+                                {% if customer.last_name %}{{ customer.last_name }}{% endif %}
+                            </div>
+                            <small class="email">{{ customer.email }}</small>
+                        </td>
+                        <td>{{ customer.phone }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'customers:edit_customer' customer.id %}" 
+                                   class="btn-action edit">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <a href="{% url 'customers:customer_details' customer.id %}" 
+                                   class="btn-action view">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button class="btn-action delete" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal{{ customer.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Delete Modal for Each Customer -->
+                    <div class="modal fade" id="deleteModal{{ customer.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ customer.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ customer.id }}">Delete Customer</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete <strong>{{ customer.first_name }} {{ customer.last_name }}</strong>? This action cannot be undone.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="POST" action="{% url 'customers:delete_customer' customer.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    /* Color Enhancements */
+    :root {
+        --primary: #4A55A2; /* Deep Blue */
+        --secondary: #7895CB; /* Soft Blue */
+        --accent: #A0BFE0; /* Light Blue */
+        --background: #F5F5F5; /* Light Gray */
+        --glass: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+        --text: #2C2C2C; /* Dark Gray */
+        --text-soft: #6C757D; /* Gray */
+    }
+
+    /* Base Styles */
+    body {
+        background-color: var(--background);
+        font-family: 'Inter', sans-serif;
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+    }
+
+    .main-container {
+        padding: 1rem; /* Reduced padding */
+    }
+
+    /* Header Section */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem; /* Reduced margin */
+        padding: 1rem; /* Reduced padding */
+        background: var(--glass);
+        border-radius: 16px; /* Reduced border radius */
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-text h1 {
+        font-size: 2rem; /* Reduced font size */
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .tagline {
+        color: var(--text-soft);
+        font-size: 1rem; /* Reduced font size */
+        margin-top: 0.25rem; /* Reduced margin */
+    }
+
+    /* Total Customers Card */
+    .total-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem; /* Reduced gap */
+        padding: 1rem; /* Reduced padding */
+        background: var(--glass);
+        border-radius: 12px; /* Reduced border radius */
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .total-card i {
+        font-size: 2rem; /* Reduced font size */
+        color: var(--accent);
+    }
+
+    .count {
+        font-size: 2.2rem; /* Reduced font size */
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1;
+    }
+
+    .label {
+        display: block;
+        color: var(--text-soft);
+        font-size: 0.8rem; /* Reduced font size */
+    }
+
+    /* Search Bar Styling */
+    .search-card {
+        margin-bottom: 1rem; /* Reduced margin */
+    }
+
+    .search-group {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem; /* Reduced gap */
+        width: 100%;
+    }
+
+    .search-group .glass-input {
+        flex: 1;
+        padding: 0.8rem; /* Reduced padding */
+        border-radius: 8px; /* Reduced border radius */
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: var(--glass);
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-group .glass-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(74, 85, 162, 0.2);
+    }
+
+    /* Table Styling */
+    .neo-table {
+        width: 100%;
+        color: var(--text);
+        border-collapse: separate;
+        border-spacing: 0 0.5rem; /* Reduced spacing */
+    }
+
+    .neo-table thead th {
+        background: var(--glass);
+        padding: 1rem; /* Reduced padding */
+        font-weight: 600;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    .neo-table tbody tr {
+        background: var(--glass);
+        transition: all 0.3s ease;
+    }
+
+    .neo-table tbody tr:hover {
+        transform: translateX(8px);
+        background: rgba(74, 85, 162, 0.05);
+    }
+
+    .neo-table td {
+        padding: 1rem; /* Reduced padding */
+        border-radius: 8px;
+    }
+
+    .customer-name {
+        font-weight: 500;
+        color: var(--text);
+    }
+
+    .email {
+        color: var(--text-soft);
+        font-size: 0.9rem;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem; /* Reduced gap */
+        justify-content: flex-end;
+    }
+
+    .btn-action {
+        width: 36px; /* Reduced size */
+        height: 36px; /* Reduced size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px; /* Reduced border radius */
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .btn-action.edit { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+    .btn-action.view { background: rgba(23, 162, 184, 0.1); color: #17a2b8; }
+    .btn-action.delete { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+
+    .btn-action:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Glow Effects */
+    .glow {
+        box-shadow: 0 0 20px rgba(74, 85, 162, 0.15); /* Reduced glow */
+    }
+
+    .glow-button {
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        border: none;
+        color: var(--text);
+        padding: 0.6rem 1.2rem; /* Reduced padding */
+        border-radius: 8px; /* Reduced border radius */
+        transition: all 0.3s ease;
+    }
+
+    .glow-button:hover {
+        box-shadow: 0 0 20px var(--primary); /* Reduced glow */
+        transform: translateY(-2px);
+    }
+</style>
+
+<!-- JavaScript for Interactive Effects -->
+<script>
+    // Smooth hover effect for table rows
+    document.querySelectorAll('.neo-table tbody tr').forEach(row => {
+        row.addEventListener('mouseenter', () => {
+            row.style.transform = 'translateX(8px)';
+            row.style.background = 'rgba(74, 85, 162, 0.05)';
+        });
+        row.addEventListener('mouseleave', () => {
+            row.style.transform = 'translateX(0)';
+            row.style.background = 'var(--glass)';
+        });
+    });
+
+    // Smooth hover effect for action buttons
+    document.querySelectorAll('.btn-action').forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            button.style.transform = 'translateY(-3px)';
+            button.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+        });
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = 'translateY(0)';
+            button.style.boxShadow = 'none';
+        });
+    });
+</script>
+{% endblock %}

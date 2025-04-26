@@ -1,0 +1,379 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}Add New Customer | Sachdeva Opticals{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header Section -->
+    <header class="header mb-5">
+        <h1 class="display-4 fw-bold">
+            <i class="fas fa-user-plus me-2"></i>Add New Customer
+        </h1>
+        <p class="lead text-muted">Fill in the details below to add a new customer.</p>
+    </header>
+
+    <!-- Form Section -->
+    <form method="post" enctype="multipart/form-data" novalidate onsubmit="return validateForm()">
+        {% csrf_token %}
+        
+        <!-- Personal Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4><i class="fas fa-user me-2"></i>Personal Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <!-- First Name -->
+                    <div class="col-md-6">
+                        <label class="form-label" for="first_name">First Name<span class="required-asterisk">*</span></label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        <div class="invalid-feedback">Please enter first name</div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6">
+                        <label class="form-label" for="last_name">Last Name<span class="required-asterisk">*</span></label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        <div class="invalid-feedback">Please enter last name</div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <label class="form-label" for="email">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email">
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-6">
+                        <label class="form-label" for="phone">Phone<span class="required-asterisk">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+                        <div class="invalid-feedback">Please enter phone number</div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-12">
+                        <label class="form-label" for="address">Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <textarea class="form-control" id="address" name="address" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="col-md-6">
+                        <label class="form-label" for="date_of_birth">Date of Birth</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
+                        </div>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="col-md-6">
+                        <label class="form-label" for="gender">Gender<span class="required-asterisk">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                                <option value="O">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eye Prescription Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4><i class="fas fa-eye me-2"></i>Eye Prescription Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Left Eye Section -->
+                    <div class="col-md-6">
+                        <h5 class="text-gradient"><i class="fas fa-eye me-2"></i>Left Eye (OD)</h5>
+                        <!-- SPH Left -->
+                        <div class="mb-4">
+                            <label class="form-label" for="sph_left">SPH</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="sph_left" name="sph_left">
+                                    <option value="">Select SPH</option>
+                                    {% for sph in sph_options %}
+                                    <option value="{{ sph }}">{{ sph }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" step="0.01" class="form-control" name="sph_left_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- CYL Left -->
+                        <div class="mb-4">
+                            <label class="form-label" for="cyl_left">CYL</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="cyl_left" name="cyl_left">
+                                    <option value="">Select CYL</option>
+                                    {% for cyl in cyl_options %}
+                                    <option value="{{ cyl }}">{{ cyl }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" step="0.01" class="form-control" name="cyl_left_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- AXIS Left -->
+                        <div class="mb-4">
+                            <label class="form-label" for="axis_left">AXIS</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="axis_left" name="axis_left">
+                                    <option value="">Select AXIS</option>
+                                    {% for axis in axis_options %}
+                                    <option value="{{ axis }}">{{ axis }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" class="form-control" name="axis_left_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- ADD Left -->
+                        <div class="mb-4">
+                            <label class="form-label" for="add_left">ADD</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="add_left" name="add_left">
+                                    <option value="">Select ADD</option>
+                                    {% for add in add_options %}
+                                    <option value="{{ add }}">{{ add }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" step="0.01" class="form-control" name="add_left_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- Vision Left -->
+                        <div class="mb-0">
+                            <label class="form-label" for="vision_left">Vision</label>
+                            <input type="text" class="form-control" id="vision_left" name="vision_left">
+                        </div>
+                    </div>
+
+                    <!-- Right Eye Section -->
+                    <div class="col-md-6">
+                        <h5 class="text-gradient"><i class="fas fa-eye me-2"></i>Right Eye (OS)</h5>
+                        <!-- SPH Right -->
+                        <div class="mb-4">
+                            <label class="form-label" for="sph_right">SPH</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="sph_right" name="sph_right">
+                                    <option value="">Select SPH</option>
+                                    {% for sph in sph_options %}
+                                    <option value="{{ sph }}">{{ sph }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" step="0.01" class="form-control" name="sph_right_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- CYL Right -->
+                        <div class="mb-4">
+                            <label class="form-label" for="cyl_right">CYL</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="cyl_right" name="cyl_right">
+                                    <option value="">Select CYL</option>
+                                    {% for cyl in cyl_options %}
+                                    <option value="{{ cyl }}">{{ cyl }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" step="0.01" class="form-control" name="cyl_right_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- AXIS Right -->
+                        <div class="mb-4">
+                            <label class="form-label" for="axis_right">AXIS</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="axis_right" name="axis_right">
+                                    <option value="">Select AXIS</option>
+                                    {% for axis in axis_options %}
+                                    <option value="{{ axis }}">{{ axis }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" class="form-control" name="axis_right_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- ADD Right -->
+                        <div class="mb-4">
+                            <label class="form-label" for="add_right">ADD</label>
+                            <div class="input-group">
+                                <select class="form-select select2" id="add_right" name="add_right">
+                                    <option value="">Select ADD</option>
+                                    {% for add in add_options %}
+                                    <option value="{{ add }}">{{ add }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="number" step="0.01" class="form-control" name="add_right_manual" placeholder="Manual Entry">
+                            </div>
+                        </div>
+                        <!-- Vision Right -->
+                        <div class="mb-0">
+                            <label class="form-label" for="vision_right">Vision</label>
+                            <input type="text" class="form-control" id="vision_right" name="vision_right">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prescription Date -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <label class="form-label" for="prescription_date">Prescription Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input type="date" class="form-control" id="prescription_date" name="prescription_date">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <label class="form-label" for="additional_info">Additional Information</label>
+                        <textarea class="form-control" id="additional_info" name="additional_info" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Buttons -->
+        <div class="d-flex justify-content-end gap-3 mt-4 mb-3">
+            <a href="#" class="btn btn-secondary px-4">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+            <button type="reset" class="btn btn-outline-danger px-4">
+                <i class="fas fa-undo me-2"></i>Reset
+            </a>
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="fas fa-save me-2"></i>Save Customer
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize Select2
+        $('.select2').select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
+    });
+
+    // Form Validation
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = document.querySelectorAll('input[required], select[required]');
+        requiredFields.forEach(field => {
+            if (!field.value) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        return isValid;
+    }
+
+    // Dynamic Input Focus Effect
+    document.querySelectorAll('.form-control, .form-select').forEach(input => {
+        input.addEventListener('focus', () => {
+            input.parentElement.classList.add('input-focused');
+        });
+        input.addEventListener('blur', () => {
+            input.parentElement.classList.remove('input-focused');
+        });
+    });
+
+    // Smooth Scroll to Invalid Fields
+    function scrollToInvalidField() {
+        const invalidField = document.querySelector('.is-invalid');
+        if (invalidField) {
+            invalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // Add smooth scroll to form submission
+    document.querySelector('form').addEventListener('submit', (e) => {
+        if (!validateForm()) {
+            e.preventDefault();
+            scrollToInvalidField();
+        }
+    });
+</script>
+
+<!-- Custom CSS for Interactive Effects -->
+<style>
+    /* Input Focus Effect */
+    .input-group.input-focused {
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        box-shadow: 0 0 0 0.2rem rgba(160, 191, 224, 0.25);
+    }
+
+    /* Smooth Transitions */
+    .input-group, .card, .btn {
+        transition: all 0.3s ease;
+    }
+
+    /* Button Styling */
+    .btn {
+        padding: 0.75rem 1.5rem; /* Consistent padding */
+        font-size: 1rem; /* Consistent font size */
+        border-radius: 8px; /* Consistent border radius */
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        border: none;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary);
+        color: white; /* Ensure text remains visible */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        color: var(--text);
+    }
+
+    .btn-secondary:hover {
+        background-color: rgba(74, 85, 162, 0.05);
+        color: var(--text); /* Ensure text remains visible */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-outline-danger {
+        border: 1px solid var(--card-border);
+        color: var(--text);
+    }
+
+    .btn-outline-danger:hover {
+        background-color: rgba(255, 0, 0, 0.1);
+        color: var(--text); /* Ensure text remains visible */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Card Hover Effect */
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}

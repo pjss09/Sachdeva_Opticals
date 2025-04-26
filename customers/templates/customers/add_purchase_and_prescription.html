@@ -1,0 +1,935 @@
+{% extends 'customers/base.html' %}
+
+{% block title %}Add Purchase and Prescription{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">
+                <i class="fas fa-shopping-cart"></i> 
+                Add Purchase for {{ customer.first_name }} {{ customer.last_name }}
+            </h2>
+            <div class="customer-info">
+                <div class="info-item">
+                    <i class="fas fa-phone"></i> {{ customer.phone }}
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i> {{ customer.email }}
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-day"></i> Last Visit: {{ customer.last_visit }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Category Cards -->
+        <div class="product-cards">
+            <div class="card" onclick="addPurchaseForm('spectacles')">
+                <i class="fas fa-glasses"></i>
+                <span>Spectacles</span>
+            </div>
+            <div class="card" onclick="addPurchaseForm('sunglasses')">
+                <i class="fas fa-sun"></i>
+                <span>Sunglasses</span>
+            </div>
+            <div class="card" onclick="addPurchaseForm('lenses')">
+                <i class="fas fa-eye"></i>
+                <span>Lenses</span>
+            </div>
+            <div class="card" onclick="addPurchaseForm('frames')">
+                <i class="fas fa-glasses"></i>
+                <span>Frames</span>
+            </div>
+            <div class="card" onclick="addPurchaseForm('contact_lenses')">
+                <i class="fas fa-eye"></i>
+                <span>Contact Lenses</span>
+            </div>
+            <div class="card" onclick="addPurchaseForm('contact_lens_solution')">
+                <i class="fas fa-tint"></i>
+                <span>Contact Lens Solution</span>
+            </div>
+            <div class="card" onclick="addPurchaseForm('other')">
+                <i class="fas fa-box"></i>
+                <span>Other Products</span>
+            </div>
+        </div>
+
+        <!-- Purchase Forms Container -->
+        <div id="purchaseFormsContainer">
+            <!-- Dynamic purchase forms will be added here -->
+        </div>
+
+        <!-- Form Controls -->
+        <div class="form-controls">
+            <button type="button" class="btn btn-success btn-lg" onclick="addPurchaseForm()">
+                <i class="fas fa-plus-circle"></i> Add Another Purchase
+            </button>
+            <button type="button" class="btn btn-primary btn-lg" onclick="saveAllPurchases()">
+                <i class="fas fa-save"></i> Save All Purchases
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-lg" onclick="clearAllForms()">
+                <i class="fas fa-undo"></i> Clear All Forms
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Template for New Purchase -->
+<template id="purchaseTemplate">
+    <div class="purchase-form">
+        <div class="form-header">
+            <h4 class="form-title"></h4>
+            <button type="button" class="btn btn-close" onclick="removePurchaseForm(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="form-body">
+            <!-- Product-specific fields will be added here -->
+        </div>
+    </div>
+</template>
+
+<!-- Hidden Templates for Product Fields -->
+<template id="spectaclesFields">
+    <!-- Spectacles Fields -->
+    <div class="section-title"><i class="fas fa-glasses"></i> Spectacles Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_brand" class="form-label">Brand Name</label>
+                <input type="text" class="form-control" id="id_brand" name="brand">
+            </div>
+            <div class="form-group">
+                <label for="id_model" class="form-label">Model No.</label>
+                <input type="text" class="form-control" id="id_model" name="model">
+            </div>
+            <div class="form-group">
+                <label for="id_frame_color" class="form-label">Frame Color</label>
+                <input type="text" class="form-control" id="id_frame_color" name="frame_color">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_frame_type" class="form-label">Frame Type</label>
+                <select class="form-control" id="id_frame_type" name="frame_type">
+                    <option value="full_rim">Full Rim</option>
+                    <option value="half_rim">Half Rim</option>
+                    <option value="rimless">Rimless</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_frame_material" class="form-label">Frame Material</label>
+                <select class="form-control" id="id_frame_material" name="frame_material">
+                    <option value="acetate">Acetate</option>
+                    <option value="metal">Metal</option>
+                    <option value="titanium">Titanium</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!-- Lens Details -->
+    <div class="section-title"><i class="fas fa-eye"></i> Lens Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_lens_name" class="form-label">Lens Name</label>
+                <input type="text" class="form-control" id="id_lens_name" name="lens_name">
+            </div>
+            <div class="form-group">
+                <label for="id_lens_type" class="form-label">Lens Type</label>
+                <select class="form-control" id="id_lens_type" name="lens_type">
+                    <option value="single_vision">Single Vision</option>
+                    <option value="bifocal">Bifocal</option>
+                    <option value="progressive">Progressive</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_lens_index" class="form-label">Lens Index</label>
+                <select class="form-control" id="id_lens_index" name="lens_index">
+                    <option value="1.50">CR-39 (1.50)</option>
+                    <option value="1.57">Mid-Index (1.57)</option>
+                    <option value="1.67">High-Index (1.67)</option>
+                    <option value="1.74">Ultra High-Index (1.74)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_lens_coating" class="form-label">Lens Coating</label>
+                <select class="form-control" id="id_lens_coating" name="lens_coating">
+                    <option value="anti_reflective">Anti-Reflective</option>
+                    <option value="scratch_resistant">Scratch Resistant</option>
+                    <option value="uv_protection">UV Protection</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_lens_tint" class="form-label">Lens Tint</label>
+                <input type="text" class="form-control" id="id_lens_tint" name="lens_tint">
+            </div>
+            <div class="form-group">
+                <label for="id_lens_price" class="form-label">Lens Price (₹)</label>
+                <input type="number" class="form-control" id="id_lens_price" name="lens_price" step="0.01">
+            </div>
+        </div>
+    </div>
+    <!-- Prescription Section -->
+    <div class="form-group">
+        <label for="id_use_existing_prescription" class="form-label">Use Existing Prescription</label>
+        <select class="form-control" id="id_use_existing_prescription" name="use_existing_prescription" onchange="togglePrescriptionFields(this)">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+    </div>
+    
+    <div id="existingPrescriptionSection" style="display: none;">
+        <div class="form-group">
+            <label for="id_existing_prescription" class="form-label">Select Prescription</label>
+            <select class="form-control" id="id_existing_prescription" name="existing_prescription">
+                <!-- Populate with existing prescriptions dynamically -->
+            </select>
+        </div>
+    </div>
+    <div class="section-title"><i class="fas fa-file-medical"></i> Prescription Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Left Eye (OS)</h5>
+            <div class="form-group">
+                <label for="id_sph_left" class="form-label">SPH</label>
+                <input type="number" step="0.25" class="form-control" id="id_sph_left" name="sph_left">
+            </div>
+            <div class="form-group">
+                <label for="id_cyl_left" class="form-label">CYL</label>
+                <input type="number" step="0.25" class="form-control" id="id_cyl_left" name="cyl_left">
+            </div>
+            <div class="form-group">
+                <label for="id_axis_left" class="form-label">Axis</label>
+                <input type="number" class="form-control" id="id_axis_left" name="axis_left" min="0" max="180">
+            </div>
+            <div class="form-group">
+                <label for="id_add_left" class="form-label">ADD (Left)</label>
+                <input type="number" step="0.25" class="form-control" id="id_add_left" name="add_left">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h5>Right Eye (OD)</h5>
+            <div class="form-group">
+                <label for="id_sph_right" class="form-label">SPH</label>
+                <input type="number" step="0.25" class="form-control" id="id_sph_right" name="sph_right">
+            </div>
+            <div class="form-group">
+                <label for="id_cyl_right" class="form-label">CYL</label>
+                <input type="number" step="0.25" class="form-control" id="id_cyl_right" name="cyl_right">
+            </div>
+            <div class="form-group">
+                <label for="id_axis_right" class="form-label">Axis</label>
+                <input type="number" class="form-control" id="id_axis_right" name="axis_right" min="0" max="180">
+            </div>
+            <div class="form-group">
+                <label for="id_add_right" class="form-label">ADD (Right)</label>
+                <input type="number" step="0.25" class="form-control" id="id_add_right" name="add_right">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="id_prescription_date" class="form-label">Prescription Date</label>
+        <input type="date" class="form-control" id="id_prescription_date" name="prescription_date">
+    </div>
+</template>
+
+<template id="sunglassesFields">
+    <!-- Sunglasses Fields -->
+    <div class="section-title"><i class="fas fa-sun"></i> Sunglasses Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_sunglasses_brand" class="form-label">Brand Name</label>
+                <input type="text" class="form-control" id="id_sunglasses_brand" name="sunglasses_brand">
+            </div>
+            <div class="form-group">
+                <label for="id_sunglasses_model" class="form-label">Model No.</label>
+                <input type="text" class="form-control" id="id_sunglasses_model" name="sunglasses_model">
+            </div>
+            <div class="form-group">
+                <label for="id_sunglasses_price" class="form-label">Price (₹)</label>
+                <input type="number" class="form-control" id="id_sunglasses_price" name="sunglasses_price" step="0.01">
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="lensesFields">
+    <!-- Lenses Fields -->
+    <div class="section-title"><i class="fas fa-eye"></i> Lenses Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_lens_brand" class="form-label">Lens Name </label>
+                <input type="text" class="form-control" id="id_lens_brand" name="lens_brand">
+            </div>
+            <div class="form-group">
+                <label for="id_lens_type" class="form-label">Lens Type</label>
+                <select class="form-control" id="id_lens_type" name="lens_type">
+                    <option value="single_vision">Single Vision</option>
+                    <option value="bifocal">Bifocal</option>
+                    <option value="progressive">Progressive</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_lens_index" class="form-label">Lens Index</label>
+                <select class="form-control" id="id_lens_index" name="lens_index">
+                    <option value="1.50">CR-39 (1.50)</option>
+                    <option value="1.57">Mid-Index (1.57)</option>
+                    <option value="1.67">High-Index (1.67)</option>
+                    <option value="1.74">Ultra High-Index (1.74)</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_lens_coating" class="form-label">Lens Coating</label>
+                <select class="form-control" id="id_lens_coating" name="lens_coating">
+                    <option value="anti_reflective">Anti-Reflective</option>
+                    <option value="scratch_resistant">Scratch Resistant</option>
+                    <option value="uv_protection">UV Protection</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_lens_price" class="form-label">Lens Price (₹)</label>
+                <input type="number" class="form-control" id="id_lens_price" name="lens_price" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="id_lens_quantity" class="form-label">Lens Quantity</label>
+                <input type="number" class="form-control" id="id_lens_quantity" name="lens_quantity" min="1" value="1">
+            </div>
+        </div>
+    </div>
+    <!-- Prescription Section -->
+    <div class="form-group">
+        <label for="id_use_existing_prescription" class="form-label">Use Existing Prescription</label>
+        <select class="form-control" id="id_use_existing_prescription" name="use_existing_prescription" onchange="togglePrescriptionFields(this)">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+    </div>
+    
+    <div id="existingPrescriptionSection" style="display: none;">
+        <div class="form-group">
+            <label for="id_existing_prescription" class="form-label">Select Prescription</label>
+            <select class="form-control" id="id_existing_prescription" name="existing_prescription">
+                <!-- Populate with existing prescriptions dynamically -->
+            </select>
+        </div>
+    </div>
+    <div class="section-title"><i class="fas fa-file-medical"></i> Prescription Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Left Eye (OS)</h5>
+            <div class="form-group">
+                <label for="id_sph_left" class="form-label">SPH</label>
+                <input type="number" step="0.25" class="form-control" id="id_sph_left" name="sph_left">
+            </div>
+            <div class="form-group">
+                <label for="id_cyl_left" class="form-label">CYL</label>
+                <input type="number" step="0.25" class="form-control" id="id_cyl_left" name="cyl_left">
+            </div>
+            <div class="form-group">
+                <label for="id_axis_left" class="form-label">Axis</label>
+                <input type="number" class="form-control" id="id_axis_left" name="axis_left" min="0" max="180">
+            </div>
+            <div class="form-group">
+                <label for="id_add_left" class="form-label">ADD (Left)</label>
+                <input type="number" step="0.25" class="form-control" id="id_add_left" name="add_left">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h5>Right Eye (OD)</h5>
+            <div class="form-group">
+                <label for="id_sph_right" class="form-label">SPH</label>
+                <input type="number" step="0.25" class="form-control" id="id_sph_right" name="sph_right">
+            </div>
+            <div class="form-group">
+                <label for="id_cyl_right" class="form-label">CYL</label>
+                <input type="number" step="0.25" class="form-control" id="id_cyl_right" name="cyl_right">
+            </div>
+            <div class="form-group">
+                <label for="id_axis_right" class="form-label">Axis</label>
+                <input type="number" class="form-control" id="id_axis_right" name="axis_right" min="0" max="180">
+            </div>
+            <div class="form-group">
+                <label for="id_add_right" class="form-label">ADD (Right)</label>
+                <input type="number" step="0.25" class="form-control" id="id_add_right" name="add_right">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="id_prescription_date" class="form-label">Prescription Date</label>
+        <input type="date" class="form-control" id="id_prescription_date" name="prescription_date">
+    </div>
+</template>
+
+<template id="framesFields">
+    <!-- Frames Fields -->
+    <div class="section-title"><i class="fas fa-glasses"></i> Frames Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_frame_brand" class="form-label">Frame Brand</label>
+                <input type="text" class="form-control" id="id_frame_brand" name="frame_brand">
+            </div>
+            <div class="form-group">
+                <label for="id_frame_model" class="form-label">Frame Model</label>
+                <input type="text" class="form-control" id="id_frame_model" name="frame_model">
+            </div>
+            <div class="form-group">
+                <label for="id_frame_color" class="form-label">Frame Color</label>
+                <input type="text" class="form-control" id="id_frame_color" name="frame_color">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_frame_type" class="form-label">Frame Type</label>
+                <select class="form-control" id="id_frame_type" name="frame_type">
+                    <option value="full_rim">Full Rim</option>
+                    <option value="half_rim">Half Rim</option>
+                    <option value="rimless">Rimless</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_frame_material" class="form-label">Frame Material</label>
+                <select class="form-control" id="id_frame_material" name="frame_material">
+                    <option value="acetate">Acetate</option>
+                    <option value="metal">Metal</option>
+                    <option value="titanium">Titanium</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_frame_price" class="form-label">Frame Price (₹)</label>
+                <input type="number" class="form-control" id="id_frame_price" name="frame_price" step="0.01">
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="contactLensesFields">
+    <div class="section-title"><i class="fas fa-eye"></i> Contact Lenses Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_contact_lens_brand" class="form-label">Brand Name</label>
+                <input type="text" class="form-control" id="id_contact_lens_brand" name="contact_lens_brand">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_model" class="form-label">Model No.</label>
+                <input type="text" class="form-control" id="id_contact_lens_model" name="contact_lens_model">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_type" class="form-label">Lens Type</label>
+                <select class="form-control" id="id_contact_lens_type" name="contact_lens_type">
+                    <option value="spherical">Spherical</option>
+                    <option value="toric">Toric (for Astigmatism)</option>
+                    <option value="multifocal">Multifocal</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_contact_lens_base_curve" class="form-label">Base Curve (mm)</label>
+                <input type="number" step="0.1" class="form-control" id="id_contact_lens_base_curve" name="contact_lens_base_curve">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_diameter" class="form-label">Diameter (mm)</label>
+                <input type="number" step="0.1" class="form-control" id="id_contact_lens_diameter" name="contact_lens_diameter">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_quantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="id_contact_lens_quantity" name="contact_lens_quantity" min="1" value="1">
+            </div>
+        </div>
+    </div>
+
+    <!-- Left Eye (OS) Details -->
+    <div class="section-title"><i class="fas fa-eye"></i> Left Eye (OS) Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_contact_lens_power_left" class="form-label">Power (SPH)</label>
+                <input type="number" step="0.25" class="form-control" id="id_contact_lens_power_left" name="contact_lens_power_left">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_cyl_left" class="form-label">CYL (if Toric)</label>
+                <input type="number" step="0.25" class="form-control" id="id_contact_lens_cyl_left" name="contact_lens_cyl_left">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_contact_lens_axis_left" class="form-label">Axis (if Toric)</label>
+                <input type="number" class="form-control" id="id_contact_lens_axis_left" name="contact_lens_axis_left" min="0" max="180">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_add_left" class="form-label">ADD (if Multifocal)</label>
+                <input type="number" step="0.25" class="form-control" id="id_contact_lens_add_left" name="contact_lens_add_left">
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Eye (OD) Details -->
+    <div class="section-title"><i class="fas fa-eye"></i> Right Eye (OD) Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_contact_lens_power_right" class="form-label">Power (SPH)</label>
+                <input type="number" step="0.25" class="form-control" id="id_contact_lens_power_right" name="contact_lens_power_right">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_cyl_right" class="form-label">CYL (if Toric)</label>
+                <input type="number" step="0.25" class="form-control" id="id_contact_lens_cyl_right" name="contact_lens_cyl_right">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_contact_lens_axis_right" class="form-label">Axis (if Toric)</label>
+                <input type="number" class="form-control" id="id_contact_lens_axis_right" name="contact_lens_axis_right" min="0" max="180">
+            </div>
+            <div class="form-group">
+                <label for="id_contact_lens_add_right" class="form-label">ADD (if Multifocal)</label>
+                <input type="number" step="0.25" class="form-control" id="id_contact_lens_add_right" name="contact_lens_add_right">
+            </div>
+        </div>
+    </div>
+
+    <!-- Replacement Schedule -->
+    <div class="form-group">
+        <label for="id_contact_lens_replacement" class="form-label">Replacement Schedule</label>
+        <select class="form-control" id="id_contact_lens_replacement" name="contact_lens_replacement">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+    </div>
+</template>
+
+<template id="contactLensSolutionFields">
+    <div class="section-title"><i class="fas fa-tint"></i> Contact Lens Solution Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_solution_brand" class="form-label">Brand Name</label>
+                <input type="text" class="form-control" id="id_solution_brand" name="solution_brand">
+            </div>
+            <div class="form-group">
+                <label for="id_solution_type" class="form-label">Type</label>
+                <select class="form-control" id="id_solution_type" name="solution_type">
+                    <option value="multipurpose">Multipurpose</option>
+                    <option value="hydrogen_peroxide">Hydrogen Peroxide</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_solution_quantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="id_solution_quantity" name="solution_quantity" min="1" value="1">
+            </div>
+            <div class="form-group">
+                <label for="id_solution_volume" class="form-label">Volume (ml)</label>
+                <input type="number" class="form-control" id="id_solution_volume" name="solution_volume" min="1">
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="otherProductsFields">
+    <!-- Other product templates -->
+    <div class="section-title"><i class="fas fa-box"></i> Other Product Details</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_other_product_name" class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="id_other_product_name" name="other_product_name">
+            </div>
+            <div class="form-group">
+                <label for="id_other_product_description" class="form-label">Description</label>
+                <textarea class="form-control" id="id_other_product_description" name="other_product_description"></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_other_product_quantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="id_other_product_quantity" name="other_product_quantity" min="1" value="1">
+            </div>
+            <div class="form-group">
+                <label for="id_other_product_price" class="form-label">Price (₹)</label>
+                <input type="number" class="form-control" id="id_other_product_price" name="other_product_price" step="0.01">
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    // Product Configuration
+    const productTemplates = {
+        'spectacles': document.getElementById('spectaclesFields').content,
+        'sunglasses': document.getElementById('sunglassesFields').content,
+        'lenses': document.getElementById('lensesFields').content,
+        'frames': document.getElementById('framesFields').content,
+        'contact_lenses': document.getElementById('contactLensesFields').content,
+        'contact_lens_solution': document.getElementById('contactLensSolutionFields').content,
+        'other': document.getElementById('otherProductsFields').content,
+    };
+    
+    let formCounter = 0;
+    
+    // Add a new purchase form
+    function addPurchaseForm(productType = null) {
+        const container = document.getElementById('purchaseFormsContainer');
+        const template = document.getElementById('purchaseTemplate');
+        const clone = document.importNode(template.content, true);
+    
+        const newForm = clone.querySelector('.purchase-form');
+        newForm.id = `purchaseForm_${Date.now()}_${formCounter++}`;
+    
+        // Default to "Other Products" if no product type is specified
+        const selectedProductType = productType || 'other';
+    
+        // Load the corresponding product fields
+        const productContent = document.importNode(productTemplates[selectedProductType], true);
+        newForm.querySelector('.form-body').appendChild(productContent);
+    
+        // Set the form title
+        newForm.querySelector('.form-title').textContent = 
+            `${selectedProductType.replace(/_/g, ' ').toUpperCase()} Details`;
+    
+        // Append the new form to the container
+        container.appendChild(clone);
+    
+        // Initialize form validation
+        initFormValidation(newForm);
+    }
+    
+    // Remove a purchase form
+    function removePurchaseForm(button) {
+        button.closest('.purchase-form').remove();
+    }
+    // Save all purchases
+    function saveAllPurchases() {
+        console.log("Save All Purchases button clicked"); // Debugging
+        const forms = document.querySelectorAll('.purchase-form');
+        const purchases = [];
+
+        forms.forEach(form => {
+            if (!validateForm(form)) {
+                alert("Please fill all required fields in all forms.");
+                return;
+            }
+
+            const formData = new FormData(form);
+            const purchaseData = {
+                product_type: form.querySelector('.form-title').textContent.replace(' Details', '').toLowerCase().replace(/ /g, '_'),
+            };
+
+            // Collect all fields dynamically
+            formData.forEach((value, key) => {
+                purchaseData[key] = value;
+            });
+
+            // Collect prescription fields if they exist
+            const prescriptionFields = form.querySelectorAll('[name^="sph_"], [name^="cyl_"], [name^="axis_"], [name^="add_"], [name="prescription_date"]');
+            if (prescriptionFields.length > 0) {
+                const prescriptionData = {};
+                prescriptionFields.forEach(field => {
+                    prescriptionData[field.name] = field.value;
+                });
+                purchaseData['prescription'] = prescriptionData;
+            }
+
+            purchases.push(purchaseData);
+        });
+
+        console.log("Sending data to server:", purchases); // Debugging
+
+        fetch(`/save_purchase/{{ customer.id }}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // Ensure CSRF token is included
+            },
+            body: JSON.stringify({ purchases })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Server response:", data); // Debugging
+            if (data.status === 'success') {
+                alert(data.message);
+                // Redirect to customer details page
+                window.location.href = data.redirect_url || `/customer_details/{{ customer.id }}/`;
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error); // Debugging
+        });
+    }
+    // Clear all forms
+    function clearAllForms() {
+        document.getElementById('purchaseFormsContainer').innerHTML = '';
+    }
+    
+    function togglePrescriptionFields(selectElement) {
+        const existingPrescriptionSection = selectElement.closest('.purchase-form').querySelector('#existingPrescriptionSection');
+        const prescriptionFields = selectElement.closest('.purchase-form').querySelectorAll('.prescription-field');
+    
+        if (selectElement.value === 'yes') {
+            existingPrescriptionSection.style.display = 'block';
+            prescriptionFields.forEach(field => field.style.display = 'none'); // Hide manual prescription fields
+        } else {
+            existingPrescriptionSection.style.display = 'none';
+            prescriptionFields.forEach(field => field.style.display = 'block'); // Show manual prescription fields
+        }
+    }
+    
+    // Initialize form validation
+    function initFormValidation(form) {
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.required && !input.value) {
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+        });
+    }
+    
+    // Validate a form
+    function validateForm(form) {
+        const inputs = form.querySelectorAll('input, select');
+        let isValid = true;
+        inputs.forEach(input => {
+            if (input.required && !input.value) {
+                input.classList.add('is-invalid');
+                isValid = false;
+            }
+        });
+        return isValid;
+    }
+    
+    // Get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+<style>
+    /* Professional Styling */
+    .main-container {
+        background: var(--background);
+        padding: 20px;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: linear-gradient(160deg, var(--glass) 0%, rgba(255,255,255,0.01) 100%);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 32px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 20px;
+        backdrop-filter: blur(24px);
+    }
+
+    .dashboard-title {
+        color: var(--text);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .customer-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item {
+        background: var(--glass);
+        padding: 1rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        color: var(--text);
+    }
+
+    .product-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+
+    .card {
+        background: var(--glass);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        color: var(--text);
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary);
+    }
+
+    .purchase-form {
+        background: var(--glass);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        margin: 1.5rem 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .form-title {
+        margin: 0;
+        font-size: 1.2rem;
+        color: var(--text);
+    }
+
+    .btn-close {
+        color: var(--text);
+        padding: 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-close:hover {
+        color: var(--accent);
+        transform: rotate(90deg);
+    }
+
+    .form-body {
+        padding: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .form-controls {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    /* Enhanced Font Colors */
+    .section-title {
+        color: var(--primary);
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .form-label {
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .form-control {
+        color: var(--text);
+        background: var(--glass);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
+    }
+
+    .is-invalid {
+        border-color: var(--accent);
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .btn-success {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .btn-success:hover {
+        background-color: hsl(230, 70%, 50%);
+        border-color: hsl(230, 70%, 50%);
+    }
+
+    .btn-primary {
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+    }
+
+    .btn-primary:hover {
+        background-color: hsl(300, 70%, 50%);
+        border-color: hsl(300, 70%, 50%);
+    }
+
+    .btn-outline-secondary {
+        color: var(--text);
+        border-color: var(--text);
+    }
+
+    .btn-outline-secondary:hover {
+        color: var(--background);
+        background-color: var(--text);
+        border-color: var(--text);
+    }
+
+    .btn-danger {
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+
+    .btn-danger:hover {
+        background-color: hsl(40, 80%, 50%);
+        border-color: hsl(40, 80%, 50%);
+    }
+</style>
+{% endblock %}

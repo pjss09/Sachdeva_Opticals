@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotional Message</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .promo-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .subscribe-btn {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .subscribe-btn:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #28a745;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="promo-container">
+        <h1>Special Promotion!</h1>
+        <p>Subscribe to our newsletter and get <strong>20% off</strong> your first purchase!</p>
+        
+        <form id="subscriptionForm">
+            <input type="email" class="input-field" id="email" placeholder="Enter your email address" required>
+            <input type="tel" class="input-field" id="phone" placeholder="Enter your phone number" required>
+            <button type="submit" class="subscribe-btn">Subscribe Now</button>
+        </form>
+
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('subscriptionForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const messageDiv = document.getElementById('message');
+
+            // Validate inputs
+            if (!email || !phone) {
+                messageDiv.textContent = 'Please fill in all fields.';
+                messageDiv.classList.add('error');
+                return;
+            }
+
+            try {
+                // Send data to the backend
+                const response = await fetch('/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, phone }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    messageDiv.textContent = result.message || 'Thank you for subscribing!';
+                    messageDiv.classList.remove('error');
+                } else {
+                    messageDiv.textContent = result.error || 'Something went wrong. Please try again.';
+                    messageDiv.classList.add('error');
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Failed to connect to the server. Please try again later.';
+                messageDiv.classList.add('error');
+            }
+        });
+    </script>
+
+</body>
+</html>

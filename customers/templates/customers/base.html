@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sachdeva Opticals{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary: #4A55A2; /* Deep Blue */
+            --secondary: #7895CB; /* Soft Blue */
+            --accent: #A0BFE0; /* Light Blue */
+            --background: #F5F5F5; /* Light Gray */
+            --text: #2C2C2C; /* Dark Gray */
+            --card-bg: #FFFFFF; /* White */
+            --card-border: rgba(0, 0, 0, 0.1); /* Subtle Border */
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Soft Shadow */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar - Fixed Position */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            background: var(--card-bg);
+            border-right: 1px solid var(--card-border);
+            z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .sidebar a {
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+        }
+
+        .sidebar a:hover {
+            background: rgba(74, 85, 162, 0.05); /* Light primary color */
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        /* Main Content - Scrollable */
+        .main-content {
+            margin-left: 280px;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-bottom: 2rem;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* Card Design */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px 12px 0 0;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 85, 162, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(74, 85, 162, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Input Fields */
+        .form-control, .form-select {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--card-bg);
+            border-color: var(--accent);
+            color: var(--text);
+            box-shadow: 0 0 0 0.2rem rgba(160, 191, 224, 0.25);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Dynamic Background Effect */
+        .dynamic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(74, 85, 162, 0.1), transparent 70%);
+            pointer-events: none;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(-50%, -50%); }
+            50% { transform: translate(50%, 50%); }
+            100% { transform: translate(-50%, -50%); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dynamic Background -->
+    <div class="dynamic-bg"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>SACHDEVA OPTICALS</h2>
+        <a href="{% url 'customers:dashboard' %}">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="{% url 'customers:view_customers' %}">
+            <i class="fas fa-users"></i> Customers
+        </a>
+        <a href="{% url 'customers:sales_report' %}">
+            <i class="fas fa-chart-line"></i> Sales Report
+        </a>
+        <a href="{% url 'customers:manage_inventory' %}">
+            <i class="fas fa-boxes"></i> Manage Inventory
+        </a>
+        <a href="#" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i> Go Back
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="main-container fade-in">
+            {% block content %}
+            <!-- Content will be overridden by child templates -->
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.querySelector('.sidebar');
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.add('active');
+            }
+        });
+
+        // Dynamic Background Interaction
+        document.addEventListener('mousemove', (e) => {
+            const bg = document.querySelector('.dynamic-bg');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            bg.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+        });
+    </script>
+</body>
+</html>

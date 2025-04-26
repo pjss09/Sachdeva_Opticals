@@ -1,0 +1,302 @@
+{% extends 'customers/base.html' %}
+
+{% block content %}
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background: linear-gradient(45deg, var(--primary-color), #0056b3);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prescription-table th {
+            background-color: #e9ecef;
+            font-weight: 600;
+        }
+
+        .total-box {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .invoice-logo {
+            max-width: 200px;
+            margin-bottom: 1rem;
+        }
+
+        .required-asterisk {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        .frame-measurements {
+            background-color: #fff3cd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+    </style>
+
+<div class="container">
+    <!-- Store Header -->
+    <div class="text-center mb-5">
+        <img src="customers/images/logo.png" class="invoice-logo">
+        <h2 class="text-primary">Sachdeva Opticals</h2>
+        <p class="text-muted">GSTIN: 05AOFPS6623C1Z4  | 📍 Rudrapur, Uttrakhand</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Create New Bill</h3>
+        </div>
+        <div class="card-body">
+            <form id="billForm">
+                <!-- Enhanced Customer Section -->
+                <div class="mb-4">
+                    <h5 class="section-title">Customer Details <span class="required-asterisk">*</span></h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Search Customer</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Mobile number or name" id="customerSearch">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchCustomer()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">New Customer</label>
+                            <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#newCustomerModal">
+                                <i class="fas fa-user-plus"></i> Add New
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="Full Name" id="customerName" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="tel" class="form-control" placeholder="Mobile Number" id="customerMobile" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="email" class="form-control" placeholder="Email (optional)" id="customerEmail">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Prescription Section -->
+                <div class="mb-4">
+                    <h5 class="section-title">Eye Prescription Details</h5>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-bordered prescription-table">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Right Eye (OD)</th>
+                                        <th>Left Eye (OS)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Sphere (SPH)</td>
+                                        <td><input type="number" step="0.25" class="form-control" id="sphOD"></td>
+                                        <td><input type="number" step="0.25" class="form-control" id="sphOS"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cylinder (CYL)</td>
+                                        <td><input type="number" step="0.25" class="form-control" id="cylOD"></td>
+                                        <td><input type="number" step="0.25" class="form-control" id="cylOS"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Axis</td>
+                                        <td><input type="number" class="form-control" id="axisOD"></td>
+                                        <td><input type="number" class="form-control" id="axisOS"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Add (Near)</td>
+                                        <td><input type="number" step="0.25" class="form-control" id="addOD"></td>
+                                        <td><input type="number" step="0.25" class="form-control" id="addOS"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="frame-measurements">
+                                <h6>Frame Measurements (mm)</h6>
+                                <div class="mb-2">
+                                    <label>Bridge Size</label>
+                                    <input type="number" class="form-control" id="bridgeSize">
+                                </div>
+                                <div class="mb-2">
+                                    <label>Lens Width</label>
+                                    <input type="number" class="form-control" id="lensWidth">
+                                </div>
+                                <div class="mb-2">
+                                    <label>Temple Length</label>
+                                    <input type="number" class="form-control" id="templeLength">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Product Section -->
+                <div class="mb-4">
+                    <h5 class="section-title">Products & Services</h5>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3">
+                            <select class="form-select" id="productCategory">
+                                <option value="frame">Eyeglass Frames</option>
+                                <option value="lens">Lenses</option>
+                                <option value="sunglasses">Sunglasses</option>
+                                <option value="service">Services</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="productBrand">
+                                <option value="">Select Brand</option>
+                                <option value="titan">Titan</option>
+                                <option value="rayban">Ray-Ban</option>
+                                <option value="essilor">Essilor</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" placeholder="Quantity" id="productQty" min="1" value="1">
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary w-100" type="button" onclick="addProduct()">
+                                <i class="fas fa-cart-plus"></i> Add Item
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Type</th>
+                                    <th>Price (₹)</th>
+                                    <th>Qty</th>
+                                    <th>GST</th>
+                                    <th>Total (₹)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsList">
+                                <!-- Product rows will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pricing Section -->
+                <div class="total-box">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label>Subtotal (₹):</label>
+                                <input type="number" class="form-control" id="subtotal" readonly>
+                            </div>
+                            <div class="mb-2">
+                                <label>Discount (%):</label>
+                                <input type="number" class="form-control" id="discount" value="0" min="0" max="100">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label>CGST (9%):</label>
+                                <input type="number" class="form-control" id="cgst" readonly>
+                            </div>
+                            <div class="mb-2">
+                                <label>SGST (9%):</label>
+                                <input type="number" class="form-control" id="sgst" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2">
+                                <label>Total Amount (₹):</label>
+                                <input type="number" class="form-control" id="totalAmount" readonly>
+                            </div>
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-success" onclick="generateInvoice()">
+                                    <i class="fas fa-file-invoice-dollar"></i> Generate Invoice
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- New Customer Modal -->
+<div class="modal fade" id="newCustomerModal" tabindex="-1">
+    <!-- Modal content for new customer registration -->
+</div>
+
+<!-- Invoice Preview Modal -->
+<div class="modal fade" id="invoicePreviewModal" tabindex="-1">
+    <!-- Modal content for invoice preview -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Enhanced product database
+    const products = {
+        frame: [
+            { brand: 'titan', name: 'Titan Steel Frame', price: 2500, gst: 18 },
+            { brand: 'rayban', name: 'Ray-Ban Aviator', price: 8500, gst: 18 }
+        ],
+        lens: [
+            { brand: 'essilor', name: 'Blue Cut Lens', price: 1500, gst: 12 },
+            { brand: 'essilor', name: 'Progressive Lens', price: 4500, gst: 12 }
+        ]
+    };
+
+    function addProduct() {
+        // Product addition logic with GST calculation
+    }
+
+    function calculateTotals() {
+        // Enhanced GST calculation with CGST/SGST split
+    }
+
+    function generateInvoice() {
+        // Invoice generation with Indian format
+    }
+
+    // Additional functions for customer search, frame measurements, etc.
+</script>
+{% endblock %}
